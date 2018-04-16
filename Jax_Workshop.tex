@@ -1,0 +1,674 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfauthor={Stephen Williams, PhD. 10x Genomics Applications Scientist stephen.williams@10xgenomics.com},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{10x Genomics Bioinformatic Workshop
+
+Jackson Labs 2018}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Stephen Williams, PhD. 10x Genomics Applications Scientist
+\href{mailto:stephen.williams@10xgenomics.com}{\nolinkurl{stephen.williams@10xgenomics.com}}}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{Compiled: April 11, 2018}
+
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\section{\texorpdfstring{\textbf{Introduction}}{Introduction}}\label{introduction}
+
+\textbf{To get to this notebook please navigate your browser to
+\url{http://34.205.68.94/10x-tutorial/Jax_Workshop.nb.html} }
+
+The purpose of this tutorial will be to walk new users through some of
+the steps necessary to explore Whole Genome (WGS) and Whole Exome (WES)
+sequencing data generated form the 10x Genomics Chromium platform and
+the
+\href{https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger}{Longranger
+pipeline}. We will investigate the Linked-Read data using a variety of
+tools, all of which are freely available either from
+\href{https://support.10xgenomics.com/genome-exome/software/overview/welcome}{10x
+Genomics} or their home repos (GitHub, SourceForge, etc.)
+
+\textbf{Things to know about this workshop}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  All files that will be used can be found at:
+  \url{http://34.205.68.94/}
+\item
+  The 10x Loupe browser can be found at:
+  \url{http://34.205.68.94:3000/loupe/}
+\item
+  Reference genome for all samples is hg19
+\item
+  .bam files are only for chr21
+\item
+  .vcf and Loupe files contain information for the entire genome
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{\textbf{10x Chromium Workflow
+Overview}}{10x Chromium Workflow Overview}}\label{x-chromium-workflow-overview}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{http://34.205.68.94/figures/10x_tech.png}
+\caption{}
+\end{figure}
+
+\section{\texorpdfstring{\textbf{Logging in to the Jax Workshow AWS
+instance}}{Logging in to the Jax Workshow AWS instance}}\label{logging-in-to-the-jax-workshow-aws-instance}
+
+\emph{Maybe Rachel and Sandeep can help take care of this?}
+
+On a Mac open the terminal and:
+
+\begin{verbatim}
+ssh sequser@34.205.68.94
+sequser@34.205.68.94's password: jgm2018
+cd /home/ubuntu
+sequser@ip-172-31-63-156:/home/ubuntu$ ls -l
+total 36
+drwxrwxr-x  2 ubuntu ubuntu 4096 Apr  2 17:44 10x-bam-files
+drwxrwxr-x  2 ubuntu ubuntu 4096 Apr 10 21:34 10x-loupe-files
+drwxrwxr-x  2 ubuntu ubuntu 4096 Apr 11 06:21 10x-tutorial
+drwxrwxr-x  2 ubuntu ubuntu 4096 Apr 11 16:35 10x-vcf-files
+drwxrwxr-x  2 ubuntu ubuntu 4096 Apr 11 16:20 figures
+drwxrwxr-x  3 ubuntu ubuntu 4096 Mar 30 21:02 igv
+drwxrwxr-x 15 ubuntu ubuntu 4096 Apr  2 18:33 miniconda2
+drwxrwxr-x  2 ubuntu ubuntu 4096 Mar 30 17:38 misc
+drwxr-xr-x  3 ubuntu ubuntu 4096 Apr 11 14:23 R
+\end{verbatim}
+
+On Windows you'll probably need an application like
+\href{https://www.putty.org/}{PuTTy}
+
+\section{\texorpdfstring{\textbf{Exploring 10x
+Data}}{Exploring 10x Data}}\label{exploring-10x-data}
+
+\subsection{\texorpdfstring{\textbf{Exploring the 10x data via
+Integrated Geonome Browser (IGV) from the Broad
+Institute}}{Exploring the 10x data via Integrated Geonome Browser (IGV) from the Broad Institute}}\label{exploring-the-10x-data-via-integrated-geonome-browser-igv-from-the-broad-institute}
+
+IGV is one of the most common tools used in the field of genomics to
+view a variety of different data types. If you do not have IGV, or don't
+have the latest version (2.4), please download it from
+\url{https://software.broadinstitute.org/software/igv/download}
+
+First open IGV and load the 10x data. There are two .bam files that can
+be explored. Here's a snapshot of the \texttt{10x-bam-files} directory
+
+\begin{verbatim}
+ubuntu@ip-172-31-63-156:~/10x-bam-files$ ls /home/ubuntu/10x-bam-files
+total 1.3G
+-rw-rw-r-- 1 ubuntu ubuntu  64M Apr  2 17:37 NA12878_chr21_phased_possorted_exome_bam.bam
+-rw-rw-r-- 1 ubuntu ubuntu  83K Apr  2 17:37 NA12878_chr21_phased_possorted_exome_bam.bam.bai
+-rw-rw-r-- 1 ubuntu ubuntu 1.2G Apr  2 17:41 NA12878_chr21_phased_possorted_WGS_bam.bam
+-rw-rw-r-- 1 ubuntu ubuntu 116K Apr  2 17:37 NA12878_chr21_phased_possorted_WGS_bam.bam.bai
+-rw-rw-r-- 1 ubuntu ubuntu  891 Apr  2 17:44 README.md
+\end{verbatim}
+
+In order to load one of the .bam files follow the following steps.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Navigate your browser to \url{http://34.205.68.94/10x-bam-files/}
+\item
+  Copy the link address for one of the .bam files
+\item
+  Open IGV
+\item
+  Click File -\textgreater{} Load from URL
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Do the same thing for the corresponding .vcf.gz if you'd like
+  \end{itemize}
+\item
+  Paste the copied link address into the first box (you will not need to
+  paste anything into the second box)
+\item
+  Navigate to your favorite gene on chr21
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Maybe \emph{CBS}
+  \end{itemize}
+\end{enumerate}
+
+Depending on what view you are in you might see reads paired in a
+variety of different ways. To show some of the special features of the
+10x data:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Right click on the cell to the left ending in ``bam.bam''
+\item
+  Select ``View linked reads (BX)''
+\end{enumerate}
+
+This will order the reads by barcode and, if possible, phase the region
+that you are investigating. Groups of reads will be ``linked'' to each
+other by the individual barcodes associated with the single molecule
+that the reads originated from. The reads and barcodes will also be
+separated into phased haplotypes 1 (red) and 2 (blue). Those reads that
+could not be phased re represented by grey lines. These unphased reads
+are still useful and are utilized in most steps of Longranger.
+
+Some things to keep in mind when thinking about 10x data
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Input material \textbf{MATTERS}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The old adage ``Put junk in get junk out'' applies here
+  \item
+    Linked-Read data can be generated from shorter fragments and much of
+    the enhance utility is retained but the longer DNA input length the
+    better
+  \end{itemize}
+\item
+  Not only will you have ``read coverage'' at any given locus you will
+  also have physical, or barcode, coverage
+
+  \begin{itemize}
+  \tightlist
+  \item
+    This enables enhanced Structural Variant detection from what is
+    otherwise short-read data
+  \end{itemize}
+\item
+  Phasing is completely dependent on
+
+  \begin{itemize}
+  \tightlist
+  \item
+    SNV variation in the given region
+  \item
+    Accessibility to that region
+  \end{itemize}
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{\texorpdfstring{\textbf{Exploring the 10x data via the Loupe
+Browser by 10x
+Genomics}}{Exploring the 10x data via the Loupe Browser by 10x Genomics}}\label{exploring-the-10x-data-via-the-loupe-browser-by-10x-genomics}
+
+The Loupe Browser is a 10x specific genome browser that more fully
+captures some of the enhanced information that Linked-Reads will get you
+in your WGS or WES experiments.
+\href{https://support.10xgenomics.com/genome-exome/software/visualization/latest/what-is-loupe}{Loupe}
+is fully integrated into the Longranger pipeline and .loupe files are
+automatically generated by default.
+
+Our workshop has the Loupe browser setup at the address
+\url{http://34.205.68.94:3000/loupe/}
+
+If you look at the \texttt{10x-loupe-files} directory you can see three
+loupe files to explore.
+
+\begin{verbatim}
+ubuntu@ip-172-31-63-156:~/10x-loupe-files$ ls /home/ubuntu/10x-loupe-files
+total 422M
+-rw-rw-r-- 1 ubuntu ubuntu  40M Dec  8 09:02 LungTumorT.loupe
+-rw-rw-r-- 1 ubuntu ubuntu 383M Apr 10 20:05 NA12878_exome.loupe
+\end{verbatim}
+
+\subsubsection{The Loupe main page}\label{the-loupe-main-page}
+
+First let's go to \url{http://34.205.68.94:3000/loupe/} and click on
+\texttt{NA12878\_exome.loupe}. This will bring us to the main page of
+Loupe which looks like this.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{http://34.205.68.94/figures/Loupe_frontpage.png}
+\caption{}
+\end{figure}
+
+As you can see we have some nice statistics about the performance of our
+sequencing experiment including:
+
+\begin{itemize}
+\tightlist
+\item
+  The number of genes phased
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Fraction of genes (\textless{}100kb long) that are contained within
+    a single phase block.
+  \end{itemize}
+\item
+  Phase-block information
+
+  \begin{itemize}
+  \tightlist
+  \item
+    SNPs Phased
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Percentage of heterozygous SNPs that were phased.
+    \end{itemize}
+  \item
+    Longest Phase Block
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Length of the longest phase block.
+    \end{itemize}
+  \item
+    N50 Phase Block
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Half of the genome was phased into phase blocks of at least this
+      length.
+    \end{itemize}
+  \end{itemize}
+\item
+  Molecule length distribution (we'll work on recreating this)
+\item
+  GEM statistics
+\end{itemize}
+
+\subsubsection{Haplotype View}\label{haplotype-view}
+
+Let's navigate to \texttt{chr17:41,074,530-41,399,282}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{http://34.205.68.94/figures/NA12878_haplotypes.png}
+\caption{}
+\end{figure}
+
+There are a lot of ``clickable'' features to see here:
+
+\begin{itemize}
+\tightlist
+\item
+  An annotation track
+\item
+  Coverage track in green
+\item
+  Exome bait targets (blue bars)
+\item
+  Variants
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{http://34.205.68.94/figures/legend.svg}
+\caption{}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  Phase-blocks (black)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Breaks in phasing do not have black box around them
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Linked-Read View}\label{linked-read-view}
+
+Here you can see a similar output to that of IGV but it is a bit more
+digestible for viewing linked reads.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{http://34.205.68.94/figures/loupe-linked-reads.png}
+\caption{}
+\end{figure}
+
+Once again, we can see reads clearly phased by haplotype and reads that
+do not get phased in grey.
+
+\begin{itemize}
+\tightlist
+\item
+  In Lariat mode, Loupe colors reads based on their alignment
+  properties:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Reads with a MAPQ less than 30 are colored grey
+  \item
+    Reads with a high mapq that uniquely aligned are colored black
+  \item
+    Reads with a high mapq that lariat was able to align because of
+    their linkage to other reads are colored green.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{\texorpdfstring{\textbf{Linked-Read
+View}}{Linked-Read View}}\label{linked-read-view-1}
+
+If we open up the
+\url{http://34.205.68.94:3000/loupe/load?file=NA12878_wgs.loupe} file,
+navigate to \texttt{chr2:34,595,838-34,795,838}, and click on
+Linked-Reads we can very clearly see a hemizygous deletion in both the
+
+\textbf{Linked-Read View}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{http://34.205.68.94/figures/loupe-linked-reads-del.png}
+\caption{}
+\end{figure}
+
+and the
+
+\subsubsection{\texorpdfstring{\textbf{Structural Variants
+View}}{Structural Variants View}}\label{structural-variants-view}
+
+\paragraph{\texorpdfstring{\textbf{Structural Variants
+View}}{Structural Variants View}}\label{structural-variants-view-1}
+
+\begin{verbatim}
+    2 34,695,830  AC073218...DEL
+93  
+    2 34,736,552  AC073218...40.7 kb    
+\end{verbatim}
+
+\includegraphics{http://34.205.68.94/figures/loupe-sv-del.png}
+\includegraphics{http://34.205.68.94/figures/loupe-sv-barcode-matrix.png}
+
+and the
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{\textbf{The 10x
+VCF}}{The 10x VCF}}\label{the-10x-vcf}
+
+\subsection{Special aspects}\label{special-aspects}
+
+There are a few things that that make the 10x VCF unique. Overall 10x
+abides by the
+\href{https://samtools.github.io/hts-specs/VCFv4.2.pdf}{VCF 4.x
+standard}. However, there is some additional information that takes
+advantage of the 10x specific technology. Documents covering the the 10x
+VCF spec can be found
+\href{https://support.10xgenomics.com/genome-exome/software/pipelines/latest/output/vcf}{here}.
+A comprehensive list of the available outputs of Longranger can be found
+\href{https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger}{here}.
+
+If we navigate to a 10x VCF and have a look
+
+\begin{verbatim}
+cd /home/ubuntu/10x-vcf-files
+ubuntu@ip-172-31-63-156:~/10x-vcf-files$ ls
+total 1014M
+-rw-rw-r-- 1 ubuntu ubuntu  43M Apr 11 16:34 NA12878_wes_varcalls.vcf.gz
+-rw-rw-r-- 1 ubuntu ubuntu 882K Apr 11 16:34 NA12878_wes_varcalls.vcf.gz.tbi
+-rw-rw-r-- 1 ubuntu ubuntu 968M Apr  2 18:46 NA12878_wgs_varcalls.vcf.gz
+-rw-rw-r-- 1 ubuntu ubuntu 1.9M Apr  2 18:42 NA12878_wgs_varcalls.vcf.gz.tbi
+\end{verbatim}
+
+\begin{verbatim}
+zcat NA12878_wes_varcalls.vcf.gz | less
+
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  49255
+chr1    12198   .       G       C       1355.77 PASS    AC=2;AF=1.0;AN=2;BaseQRankSum=0.132;ClippingRankSum=0.0;DP=42;ExcessHet=3.0103;FS=0.0;MLEAC=2;MLEAF=1.0;MQ=53.23;MQRankSum=1.593;QD=32.28;ReadPosRankSum=1.653;SOR=0.286;MUMAP_REF=3.73913;MUMAP_ALT=24.775;AO=34;RO=0
+;MMD=0.885642;RESCUED=1;NOT_RESCUED=102;HAPLOCALLED=0     GT:AD:DP:GQ:PL:BX:PS    1|1:1,41:42:92:1384,92,0:,AACTCCCTCTTGGTAG-1_74;TTGCGTCAGACGCCCT-1_74;GTACATGAGGTGCGTA-1_65;TAAGGCTCAAGGGTGT-1_74;CACAGTACACATTGGT-1_74_74;GCAAACTGTAAACGGC-1_70;CGGATTATCTGAACTG-1_70;ATGCA
+ACTCTCCCAAC-1_60;CATCGGGTCATAACCG-1_74;ACACAACAGAGAGGCG-1_74;GTAGTCAAGGCCGAAT-1_74;TGCATCCTCGTCTGAA-1_74;ATCATGGTCATCGAGT-1_70;CAGCTAACAAGAGTCG-1_60_70;GGGCCATTCTACAAGC-1_55;GTGACCGTCACAGCCG-1_70;GTTTCATGTACGAGAC-1_74;TTAGTCTAGCTAAGTA-1_74_55_74;GTCGACGCACTAAGGG-1_74;GC
+GCTGAAGCGATTAA-1_45;TGCAACAGTTCTGTTT-1_70;GGCAACCAGAGACTAT-1_70;CGCACTTTCCATCGTC-1_74_74;GGCGACTAGCGTGTGA-1_74;TAGGCGCCAGGTCAAG-1_74;TGCTAAGAGGTTTCGT-1_74_74;GTCCTCATCTTCCTTC-1_74;ACTGAGTGTCCATTGA-1_74:12198
+chr1    12305   .       C       T       18.82   PASS    AC=1;AF=0.5;AN=2;BaseQRankSum=1.097;ClippingRankSum=0.0;DP=12;ExcessHet=3.0103;FS=0.0;MLEAC=1;MLEAF=0.5;MQ=51.41;MQRankSum=-0.23;QD=1.71;ReadPosRankSum=-0.253;SOR=0.086;MUMAP_REF=13.6977;MUMAP_ALT=15.6667;AO=2;RO=9;MMD=0.901709;RESCUED=0;NOT_RESCUED=49;HAPLOCALLED=0      GT:AD:DP:GQ:PL:BX:PS:PQ:JQ      0/1:9,2:11:47:47,0,315:TTAGTCTAGCTAAGTA-1_70;GTCGACGCACTAAGGG-1_74;ACCACGGCATACAGAA-1_55;ACACAACAGAGAGGCG-1_70;TGCATCCTCGTCTGAA-1_65;CGCACTTTCCATCGTC-1_74;ACTGGGCGTCCATCCT-1_74;GTGCTCTCAAGTACAA-1_70;GGCGACTAGCGTGTGA-1_70,GTAGTCAAGGCCGAAT-1_74;ATCATGGTCATCGAGT-1_74:1:10:255
+chr1    12383   .       G       A       172.74  PASS    AC=1;AF=0.5;AN=2;BaseQRankSum=-0.674;ClippingRankSum=0.0;DP=9;ExcessHet=3.0103;FS=6.021;MLEAC=1;MLEAF=0.5;MQ=49.26;MQRankSum=0.887;QD=21.59;ReadPosRankSum=-0.489;SOR=2.526;MUMAP_REF=7.0;MUMAP_ALT=26.4706;AO=8;RO=0;MMD=0.898793;RESCUED=0;NOT_RESCUED=21;HAPLOCALLED=0       GT:AD:DP:GQ:PL:BX:PS:PQ:JQ      1|0:1,7:8:6:200,0,6:,GAAATGAAGTTTCTTC-1_60;ACCACGGCATACAGAA-1_74;TTGCGTCAGACGCCCT-1_74;AGGAGACCATGTATGC-1_55;TGCATCCTCGTCTGAA-1_74;GCAAACTGTAAACGGC-1_70;GACGCGTGTCCTCGGA-1_45;TCCATCGAGGGCGAAG-1_70:1:44:36
+\end{verbatim}
+
+\textbf{Not only do you see some of the typical things}
+
+\begin{itemize}
+\tightlist
+\item
+  chr, pos
+\item
+  REF, ALT
+\item
+  QUAL
+\item
+  FILTER
+
+  \begin{itemize}
+  \tightlist
+  \item
+    PASS
+  \item
+    Reason for filtering
+  \end{itemize}
+\end{itemize}
+
+\textbf{You can also see some of the extra 10x ``stuff''. Mostly in the
+FORMAT field}
+
+\begin{itemize}
+\tightlist
+\item
+  BX
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Barcodes of reads associated with an given variant
+  \item
+    First set of \texttt{;} separated barcodes cover the first allele
+    followed by a \texttt{,} which separates barcodes associated with
+    reads covering the second allele
+  \end{itemize}
+\item
+  PS
+
+  \begin{itemize}
+  \tightlist
+  \item
+    phase set
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Information about the phase block for with the variant is assigned
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+This extra information can be very useful for looking at variants that
+may or may not be in \emph{cis} or \emph{trans}. This can be especially
+useful if you have compound heterozygote variants. All the alleles on
+one side of the separator (\texttt{\textbar{}}) with the same
+\texttt{PS} are from the same haplotype.
+
+\emph{Note}: For GT, \texttt{\textbar{}} represents a phased variant
+\texttt{\textbackslash{}} represents an unphased variant
+
+The 10x VCF is fully compatable with downstream analysis tools such as
+\href{https://uswest.ensembl.org/info/docs/tools/vep/index.html}{Variant
+Effect Predictor}, \href{http://snpeff.sourceforge.net/}{snpEFF}, and
+\href{http://gemini.readthedocs.io/en/latest/index.html}{Gemini} for
+example.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{\textbf{The 10x
+.bam}}{The 10x .bam}}\label{the-10x-.bam}
+
+\subsection{General 10x .bam
+information}\label{general-10x-.bam-information}
+
+The 10x/Linked-Read .bam file contains much of the same information that
+a typical short read .bam would, but like the VCF has some extra
+information. Documents covering the the 10x .bam spec can be found
+\href{https://support.10xgenomics.com/genome-exome/software/pipelines/latest/output/bam}{here}
+
+If we take a look we can see some interesting features:
+
+\begin{verbatim}
+cd /home/ubuntu/10x-bam-files
+samtools view -h NA12878_chr21_phased_possorted_exome_bam.bam | less
+\end{verbatim}
+
+\begin{verbatim}
+@PG     ID:lariat       PN:longranger.lariat    CL:lariat -reads=/mnt/analysis/marsoc/pipestances/HGKNJBBXX/PHASER_SVCALLER_EXOME_PD/49255/1016.1.1-0/PHASER_SVCALLER_EXOME_PD/PHASER_SVCALLER_EXOME/_LINKED_READS_ALIGNER/_FASTQ_PREP_NEW/SORT_FASTQS/fork0/join-u29c07c9de1/fi
+les/chunk-0.fasth.gz -read_groups=49255:MissingLibrary:1:unknown_fc:0 -genome=/mnt/opt/refdata_new/hg19-2.0.0/fasta/genome.fa -sample_id=49255 -threads=4 -centromeres=/mnt/opt/refdata_new/hg19-2.0.0/regions/centromeres.tsv -trim_length=7 -first_chunk=True -output=/mnt/ana
+lysis/marsoc/pipestances/HGKNJBBXX/PHASER_SVCALLER_EXOME_PD/49255/1016.1.1-0/PHASER_SVCALLER_EXOME_PD/PHASER_SVCALLER_EXOME/_LINKED_READS_ALIGNER/BARCODE_AWARE_ALIGNER/fork0/chnk000-u29c07c9e62/files VN:'576387f'
+@PG     ID:attach_phasing       PN:longranger.attach_phasing    PP:lariat       VN:1016.1.1
+@PG     ID:longranger   PN:longranger   PP:attach_phasing       VN:1016.1.1
+@CO     10x_bam_to_fastq:R1(RX:QX,TR:TQ,SEQ:QUAL)
+@CO     10x_bam_to_fastq:R2(SEQ:QUAL)
+@CO     10x_bam_to_fastq:I1(BC:QT)
+ST-K00126:334:HGKNJBBXX:4:2118:26920:14519      163     chr21   9412940 39      92M8S   =       9412953 90      GGAGTTGTATTGGTGCAGGAAGGGGAGTTTGATTTAATGAAACAATGCATTAAAAATTTGTATTCACTTTGTGATTCAATGATAGTCAATGTTAACATAA    AAA<FAJFFJJJJJJJJJJFJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ
+JJJJJJJJFAFF<FJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ    RX:Z:GACACATCAGCTGTTA   QX:Z:AAFFFJJJJJJJJJJJ   BC:Z:TCTCGGGC   QT:Z:AAFFFJJJ   XS:i:-13        AS:i:-9 XM:A:0  AM:A:0  XT:i:0  BX:Z:GACACATCAGCTGTTA-1 RG:Z:49255:MissingLibrary:1:unknown_fc:0        OM:i:39
+ST-K00126:334:HGKNJBBXX:4:2118:26920:14519      83      chr21   9412953 39      77M     =       9412940 -90     TGCAGGAAGGGGAGTTTGATTTAATGAAACAATGCATTAAAAATTTGTATTCACTTTGTGATTCAATGATAGTCAAT   FJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJFJJJJJJ
+RX:Z:GACACATCAGCTGTTA   QX:Z:AAFFFJJJJJJJJJJJ   TR:Z:TGTTAAC    TQ:Z:JJJJJJJ    BC:Z:TCTCGGGC   QT:Z:AAFFFJJJ   XS:i:-13        AS:i:-9 XM:A:0  AM:A:0  XT:i:0  BX:Z:GACACATCAGCTGTTA-1 RG:Z:49255:MissingLibrary:1:unknown_fc:0        OM:i:39
+ST-K00126:334:HGKNJBBXX:4:1114:32644:45010      99      chr21   9413248 39      77M     =       9413263 115     TGAATATTTTCTCAGCAACTGTGGTGTTATGATATATATTGGTTTTCATCCCCAGTTCCTGGCTTATAACTCCCCTA   FF<J<FJJJ-J<JFAJFJJAJ-A-<7<A--FJ-AJJJFFFFJF-<FFF-F--7A<FF-<AF<JA-A-JJ-<<7FFF<
+RX:Z:NAGGGTGAGGCATGGT   QX:Z:#<<AAFFJJFJJA<J<   TR:Z:TTCCGCA    TQ:Z:<FJJJFA    BC:Z:TCTCGGGC   QT:Z:AAAFFJJJ   XS:i:-12        AS:i:-8 XM:A:0  AM:A:0  XT:i:0  BX:Z:AAGGGTGAGGCATGGT-1 RG:Z:49255:MissingLibrary:1:unknown_fc:0        OM:i:39
+\end{verbatim}
+
+Things to look for:
+
+\begin{itemize}
+\tightlist
+\item
+  BX tag such as \texttt{BX:Z:GACACATCAGCTGTTA-1}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Barcode associated with a tag
+  \end{itemize}
+\item
+  Softclips (\emph{ask pat})
+\end{itemize}
+
+\emph{Informatics Tip}: if you'd like to search for all the reads
+associated with a list of barcodes, this is the fastest way to do it
+(will need \href{https://github.com/BurntSushi/ripgrep}{ripgrep})
+
+\begin{verbatim}
+samtools view -@ 5 possorted_exome_bam.bam | rg -j 5 --no-line-number -F -f BX_list.txt > BC_reads.sam
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{10x Genomics Software}\label{x-genomics-software}
+
+All 10x specific software and information about 10x specific file
+formats can be found
+\href{https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger}{here}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{Jupitor Notebook}\label{jupitor-notebook}
+
+get into the LR env.
+
+\begin{verbatim}
+source /opt/longranger-2.2.2/sourceme.bash
+\end{verbatim}
+
+
+\end{document}

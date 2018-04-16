@@ -1,0 +1,6 @@
+"0","knitr::opts_chunk$set("
+"0","  cache = FALSE,"
+"0","  cache.lazy = FALSE,"
+"0","  tidy = TRUE,"
+"0","  out.width = 500"
+"0",")"
