@@ -1,15 +1,19 @@
 ---
 title: "10x Genomics Bioinformatic Workshop \n \n Jackson Labs 2018"
-author: "[Stephen Williams, PhD.](mailto:stephen.williams@10xgenomics.com) 10x Genomics Applications Scientist"
+author: '[Stephen Williams, PhD.](mailto:stephen.williams@10xgenomics.com) 10x Genomics
+  Applications Scientist'
 date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 output:
   html_notebook:
+    includes:
+      after_body: footer.html
     theme: paper
     toc: yes
     toc_depth: 3
     toc_float: yes
-    includes:
-      after_body: footer.html
+  html_document:
+    toc: yes
+    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
