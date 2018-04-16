@@ -1,15 +1,19 @@
 ---
 title: "10x Genomics Bioinformatic Workshop \n \n Jackson Labs 2018"
-author: "[Stephen Williams, PhD.](mailto:stephen.williams@10xgenomics.com) 10x Genomics Applications Scientist"
+author: '[Stephen Williams, PhD.](mailto:stephen.williams@10xgenomics.com) 10x Genomics
+  Applications Scientist'
 date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 output:
+  html_document:
+    toc: yes
+    toc_depth: '3'
   html_notebook:
+    includes:
+      after_body: footer.html
     theme: paper
     toc: yes
     toc_depth: 3
     toc_float: yes
-    includes:
-      after_body: footer.html
 ---
 
 ```{r setup, include=FALSE}
@@ -291,9 +295,7 @@ _Informatics Tip_: If have a variant of interest and you'd like to look at all t
 
 * `zcat NA12878_wes_varcalls.vcf.gz | rg '1308074'` 
 
-This will output all called SNPs, both filtered and unfiltered, that land in the paseblock of interest. The `HAPLOCALLED=1` or `HAPLOCALLED=0` notation in the `INFO` field indicates which haplotype the SNP was derived from (i.e. SNVs that are in _cis_ or _trans_). This is very informative when you have a potential compound variant. If you'd like to search for all the SNVs that fall in the same haplotype block AND are in _cis_ with each other you can simply add one more pipe 
-
-* `zcat NA12878_wes_varcalls.vcf.gz | rg '1308074' | rg 'HAPLOCALLED=0'` or `zcat NA12878_wes_varcalls.vcf.gz | rg '1308074' | rg 'HAPLOCALLED=1'`
+This will output all called SNPs, both filtered and unfiltered, that land in the paseblock of interest. SNPs with the same `PS` number are in _cis_ with each other. This is very informative when you have a potential compound variant. 
 
 The 10x VCF is fully compatible with downstream analysis tools such as [Variant Effect Predictor](https://uswest.ensembl.org/info/docs/tools/vep/index.html), [snpEFF](http://snpeff.sourceforge.net/), and [Gemini](http://gemini.readthedocs.io/en/latest/index.html) to name a few. 
 
@@ -468,6 +470,8 @@ There is a whole other world of investigating SVs in 10x data. If we look at the
 
 All 10x specific software and information about 10x specific file formats can be found [here](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger)
 
+
+* If for some reason you can't get this tutorial later it is hosted here. https://stephenwilliams22.github.io/Jax_Markdown/
 
 
 

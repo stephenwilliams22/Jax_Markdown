@@ -4,6 +4,9 @@ author: '[Stephen Williams, PhD.](mailto:stephen.williams@10xgenomics.com) 10x G
   Applications Scientist'
 date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 output:
+  html_document:
+    toc: yes
+    toc_depth: '3'
   html_notebook:
     includes:
       after_body: footer.html
@@ -11,9 +14,6 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-  html_document:
-    toc: yes
-    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
