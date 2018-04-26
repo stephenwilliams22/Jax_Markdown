@@ -4,9 +4,6 @@ author: '[Stephen Williams, PhD.](mailto:stephen.williams@10xgenomics.com) 10x G
   Applications Scientist'
 date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 output:
-  html_document:
-    toc: yes
-    toc_depth: '3'
   html_notebook:
     includes:
       after_body: footer.html
@@ -32,8 +29,8 @@ The purpose of this tutorial will be to walk new users through some of the steps
 
 **Things to know about this workshop**
 
-1. All files that will be used can be found at:
-2. The 10x Loupe browser can be found at:
+1. All files that will be used can be found at: `/opt/data/10x-data/`
+2. The 10x Loupe browser can be found at your "Homepage"
 3. Reference genome for all samples is GRCh37/hg19
 4. .bam files are only for chr21
 5. .vcf and Loupe files contain information for the entire genome
@@ -96,7 +93,7 @@ Copyright (c) 2018 10x Genomics, Inc.  All rights reserved.
 -------------------------------------------------------------------------------
 
 Martian Runtime - '2.2.2-2.3.2'
-Serving UI at http://bespin1.fuzzplex.com:35831?auth=QExLD4AoBUur8zfSgjKP-gSGFQOZPB530_i-eBEpJko
+Serving UI at http://bespin1.fuzzplex.com:35831
 
 Running preflight checks (please wait)...
 Checking run folder...
@@ -287,7 +284,7 @@ chr1    12383   .       G       A       172.74  PASS    AC=1;AF=0.5;AN=2;BaseQRa
     + phase set
         + Information about the phase block for with the variant is assigned 
 
-This extra information can be very useful for looking at variants that may or may not be in _cis_ or _trans_. This can be especially useful if you have compound heterozygote variants. All the alleles on one side of the separator (`|`) with the same `PS` are from the same haplotype. 
+This extra information can be very useful for looking at variants that may or may not be in _cis_ or _trans_. This can be especially useful if you have compound heterozygote variants. All the alleles on one side of the separator (`|`) with the same `PS` are from the same haplotype (thus same parent). 
 
 _Note_: For GT, `|` represents a phased variant `\` represents an unphased variant. Definitions of all the VCF tags are available [here](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/output/vcf)
 
@@ -339,7 +336,7 @@ Depending on what view you are in you might see reads paired in a variety of dif
 
 To view the benefit of phasing navigate to `chr21:44,485,330-44,485,370`
 
-This will order the reads by barcode and, if possible, show phasing of the region that you are investigating. Groups of reads will be "linked" to each other by the individual barcodes associated with the single molecule that the reads originated from. The reads and barcodes will also be separated into phased haplotypes 1 (red) and 2 (blue) which are defined by the `HP` tag in the .bam file. Those reads that could not be phased re represented by grey lines. These unphased reads are still useful and are utilized in most steps of Longranger.
+This will order the reads by barcode and, if possible, show phasing of the region that you are investigating. Groups of reads will be "linked" to each other by the individual barcodes associated with the single molecule that the reads originated from. The reads and barcodes will also be separated into phased haplotypes 1 (red) and 2 (blue). Those reads that could not be phased are represented by grey lines. These unphased reads are still useful and are utilized in most steps of Longranger.
 
 Some things to keep in mind when thinking about 10x data
 
